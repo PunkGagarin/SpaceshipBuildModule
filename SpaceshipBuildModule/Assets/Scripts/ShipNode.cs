@@ -6,8 +6,6 @@ public class ShipNode : MonoBehaviour {
     //delegate to BuildManager?
     public bool isEmpty;
 
-    private ShipNode instance;
-
     //Module, that was built on this node
     public Module builtModule;
 
@@ -15,12 +13,11 @@ public class ShipNode : MonoBehaviour {
 
 
     private void Awake() {
-        instance ??= this;
         isEmpty = true;
     }
 
     private void Start() {
         buildManager = BuildManager.GetInstance;
-        buildManager.addExistingNode(instance);
+        buildManager.addExistingNode(this);
     }
 }
