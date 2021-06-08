@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Shipchoice.unity
+    guid: 8aaa466036032eb4cb9cd5b4280cb30c
+  - enabled: 1
     path: Assets/Scenes/Shipbuilding.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
