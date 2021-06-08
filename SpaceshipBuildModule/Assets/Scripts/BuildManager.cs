@@ -7,8 +7,10 @@ public class BuildManager : MonoBehaviour {
     private List<Module> builtModules;
 
     //Currently selected module
-    private Module temporalModule;
+    private Module moduleToBuild;
+    
     private Camera mainCamera;
+    private Plane groundPlane;
 
     public static BuildManager GetInstance { get; private set; }
 
@@ -24,23 +26,22 @@ public class BuildManager : MonoBehaviour {
 
     private void Start() {
         mainCamera = Camera.main;
+        groundPlane = new Plane(Vector3.forward, Vector3.zero);
     }
 
     private void Update() {
-        if (temporalModule != null) {
+        if (moduleToBuild != null) {
             moveAndBuildTempModule();
         }
     }
 
     private void moveAndBuildTempModule() {
-        //todo: move from Update???
-        var groundPlane = new Plane(Vector3.forward, Vector3.zero);
         var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (groundPlane.Raycast(ray, out var position)) {
             var worldPosition = ray.GetPoint((position));
             roundAndCreatePosition(worldPosition);
-            var available = checkModuleForBuild(temporalModule.transform.position);
-            temporalModule.setTransparent(available);
+            var available = checkModuleForBuild(moduleToBuild.transform.position);
+            moduleToBuild.setTransparent(available);
             buildModule(available);
         }
     }
@@ -48,12 +49,12 @@ public class BuildManager : MonoBehaviour {
     private void roundAndCreatePosition(Vector3 worldPosition) {
         var x = Mathf.RoundToInt(worldPosition.x);
         var y = Mathf.RoundToInt(worldPosition.y);
-        temporalModule.transform.position = new Vector3(x, y);
+        moduleToBuild.transform.position = new Vector3(x, y);
     }
 
     //todo: reduce calling frequency??
     private bool checkModuleForBuild(Vector3 baseCoordinate) {
-        var nodeDirections = temporalModule.directions;
+        var nodeDirections = moduleToBuild.directions;
         return nodeDirections.Select(direction =>
             ModuleUtils.vector2Direction(direction) + baseCoordinate).All(checkNodeForExisting);
     }
@@ -71,23 +72,25 @@ public class BuildManager : MonoBehaviour {
 
     private void buildModule(bool available) {
         if (available && Input.GetMouseButtonDown(0)) {
-            temporalModule.returnToNormalState();
+            moduleToBuild.returnToNormalState();
             setModuleNodes();
-            builtModules.Add(temporalModule);
-            temporalModule = null;
+            builtModules.Add(moduleToBuild);
+            moduleToBuild = null;
         }
     }
 
     private void setModuleNodes() {
-        var nodeDirections = temporalModule.directions;
+        var nodeDirections = moduleToBuild.directions;
 
         foreach (var direction in nodeDirections) {
-            Vector3 vector3 = ModuleUtils.vector2Direction(direction) + temporalModule.transform.position;
+            Vector3 vector3 = ModuleUtils.vector2Direction(direction) + moduleToBuild.transform.position;
             ShipNode node = findNodeByCoordinates(vector3);
+            
+            //TODO: potential bug?
             if (!node.isEmpty)
                 cleanUpNode(node);
-            node.builtModule = temporalModule;
-            temporalModule.addOccupiedNode(node);
+            node.builtModule = moduleToBuild;
+            moduleToBuild.addOccupiedNode(node);
         }
     }
 
@@ -104,11 +107,11 @@ public class BuildManager : MonoBehaviour {
     }
 
     public void prepareTemporalModule(Module modulePrefab) {
-        if (temporalModule != null) {
-            Destroy(temporalModule.gameObject);
+        if (moduleToBuild != null) {
+            Destroy(moduleToBuild.gameObject);
         }
 
-        temporalModule = Instantiate(modulePrefab);
+        moduleToBuild = Instantiate(modulePrefab);
     }
 
     public void addExistingNode(ShipNode node) {
