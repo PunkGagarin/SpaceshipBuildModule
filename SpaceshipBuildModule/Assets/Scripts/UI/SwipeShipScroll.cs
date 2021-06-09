@@ -37,11 +37,11 @@ public class SwipeShipScroll : MonoBehaviour {
                     scrollbar.value =
                         Mathf.Lerp(scrollbar.value, positions[i], 0.05f);
                     transform.GetChild(i).localScale =
-                        Vector2.Lerp(transform.GetChild(i).localScale, new Vector2(1.3f, 1.3f), 0.02f);
+                        Vector2.Lerp(transform.GetChild(i).localScale, new Vector2(1.3f, 1.3f), 10 * Time.deltaTime);
                 }
                 else {
                     transform.GetChild(i).localScale =
-                        Vector2.Lerp(transform.GetChild(i).localScale, new Vector2(.8f, .8f), 0.02f);
+                        Vector2.Lerp(transform.GetChild(i).localScale, new Vector2(.8f, .8f), 10 * Time.deltaTime);
                 }
             }
         }
