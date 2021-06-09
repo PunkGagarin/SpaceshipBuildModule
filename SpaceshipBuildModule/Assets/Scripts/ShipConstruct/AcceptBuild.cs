@@ -19,7 +19,7 @@ public class AcceptBuild : MonoBehaviour {
             StartCoroutine(disableEmptyNodeUI());
             return;
         }
-        ShipChooser.existingShips.tryAdd(ShipChooser.currentShipIndex, buildManager.currentShip);
+        ShipCache.existingShips.tryAdd(ShipCache.currentShipIndex, buildManager.currentShip);
         buildManager.currentShip.SetActive(false);
         sceneChanger.GoToShipChoiceScene();
     }

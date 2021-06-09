@@ -33,7 +33,7 @@ public class SwipeShipScroll : MonoBehaviour {
                 //i = 1
                 if (scrollbarPosition < positions[i] + (distance / 2) &&
                     scrollbarPosition > positions[i] - (distance / 2)) {
-                    ShipChooser.currentShipIndex = i + 1;
+                    ShipCache.currentShipIndex = i + 1;
                     scrollbar.value =
                         Mathf.Lerp(scrollbar.value, positions[i], 0.05f);
                     transform.GetChild(i).localScale =

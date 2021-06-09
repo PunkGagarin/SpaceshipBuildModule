@@ -12,17 +12,30 @@ public class ShipPlacer : MonoBehaviour {
     }
 
     private void placeShip() {
-        var shipIndex = ShipChooser.currentShipIndex > shipPrefabs.Length ? 0 : ShipChooser.currentShipIndex - 1;
-        if (ShipChooser.existingShips.TryGetValue(shipIndex + 1, out var existingShip)) {
-            existingShip.SetActive(true);
-            existingShip.transform.position = Vector3.zero;
-            buildManager.currentShip = existingShip;
+        var shipIndex = ShipCache.currentShipIndex > shipPrefabs.Length ? 0 : ShipCache.currentShipIndex - 1;
+        if (ShipCache.existingShips.TryGetValue(shipIndex + 1, out var existingShip)) {
+            placeExistingShip(existingShip);
         }
         else {
-            var shipToInstantiate = shipPrefabs[shipIndex];
-            var ship = Instantiate(shipToInstantiate, Vector3.zero, Quaternion.identity);
-            DontDestroyOnLoad(ship);
-            buildManager.currentShip = ship;
+            placeNewShip(shipIndex);
         }
+    }
+
+    private void placeExistingShip(GameObject existingShip) {
+        existingShip.SetActive(true);
+        existingShip.transform.position = Vector3.zero;
+        buildManager.currentShip = existingShip;
+
+        foreach (var shipNode in existingShip.GetComponentsInChildren<ShipNode>()) {
+            buildManager.addExistingNode(shipNode);
+        }
+    }
+
+
+    private void placeNewShip(int shipIndex) {
+        var shipToInstantiate = shipPrefabs[shipIndex];
+        var ship = Instantiate(shipToInstantiate, Vector3.zero, Quaternion.identity);
+        DontDestroyOnLoad(ship);
+        buildManager.currentShip = ship;
     }
 }

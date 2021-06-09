@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipChooser : MonoBehaviour {
+public class ShipCache : MonoBehaviour {
 
     public static int currentShipIndex = 1;
 
