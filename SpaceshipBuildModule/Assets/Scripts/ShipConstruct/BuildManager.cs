@@ -15,7 +15,6 @@ public class BuildManager : MonoBehaviour {
 
     public static BuildManager GetInstance { get; private set; }
 
-    //todo: moveout some logic????
     private void Awake() {
         if (GetInstance == null) {
             GetInstance = this;
@@ -112,13 +111,7 @@ public class BuildManager : MonoBehaviour {
         existingNodes.Add(node);
     }
 
-    public bool isAnyEmptyNode() {
-        foreach (var node in existingNodes) {
-            if (node.isEmpty) {
-                Debug.Log("There is an empty node!!!");
-                return true;
-            }
-        }
-        return false;
+    public bool isAnyEmptyNodeExists() {
+        return existingNodes.Any(node => node.isEmpty);
     }
 }

@@ -14,7 +14,7 @@ public class AcceptBuild : MonoBehaviour {
     }
 
     public void tryToAccept() {
-        if (buildManager.isAnyEmptyNode()) {
+        if (buildManager.isAnyEmptyNodeExists()) {
             emptyNodeUI.SetActive(true);
             StartCoroutine(disableEmptyNodeUI());
             return;
