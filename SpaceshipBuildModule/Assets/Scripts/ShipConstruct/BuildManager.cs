@@ -6,7 +6,6 @@ public class BuildManager : MonoBehaviour {
     public GameObject currentShip;
 
     private List<ShipNode> existingNodes;
-    private List<Module> builtModules;
 
     //Currently selected module
     private Module moduleToBuild;
@@ -22,7 +21,6 @@ public class BuildManager : MonoBehaviour {
             GetInstance = this;
         }
         existingNodes ??= new List<ShipNode>();
-        builtModules ??= new List<Module>();
     }
 
     private void Start() {
@@ -72,7 +70,6 @@ public class BuildManager : MonoBehaviour {
         if (available && Input.GetMouseButtonDown(0)) {
             moduleToBuild.returnToNormalState();
             setModuleNodes();
-            builtModules.Add(moduleToBuild);
             moduleToBuild.gameObject.transform.parent = currentShip.transform;
             moduleToBuild = null;
         }
@@ -101,7 +98,6 @@ public class BuildManager : MonoBehaviour {
     private void cleanUpNode(ShipNode node) {
         var nodeBuiltModule = node.builtModule;
         nodeBuiltModule.cleanUpOccupiedNodes();
-        builtModules.Remove(nodeBuiltModule);
         Destroy(nodeBuiltModule.gameObject);
     }
 
