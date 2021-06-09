@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneChanger : MonoBehaviour {
-    
+
     public void GoToConstructScene() {
         SceneManager.LoadScene("Shipbuilding");
     } 
@@ -10,7 +10,6 @@ public class SceneChanger : MonoBehaviour {
     public void GoToShipChoiceScene() {
         SceneManager.LoadScene("Shipchoice");
     }
-    
     
 
     public void Quit() {

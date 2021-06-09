@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class ModuleUtils {
@@ -18,8 +19,18 @@ public static class ModuleUtils {
             _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, "No such direction")
         };
     }
-
-    public static Vector2 convertToVector2(Vector3 vector3) {
-        return new Vector2(vector3.x, vector3.y);
+    
+    public static bool tryAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary.ContainsKey(key))
+        {
+            return false;
+        }
+        dictionary.Add(key, value);
+        return true;
+    }
+    public static bool tryAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, KeyValuePair<TKey,TValue> value)
+    {
+        return tryAdd(dictionary, value.Key, value.Value);
     }
 }

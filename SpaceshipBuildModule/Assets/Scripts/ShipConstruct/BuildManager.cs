@@ -3,12 +3,14 @@ using System.Linq;
 using UnityEngine;
 
 public class BuildManager : MonoBehaviour {
+    public GameObject currentShip;
+
     private List<ShipNode> existingNodes;
     private List<Module> builtModules;
 
     //Currently selected module
     private Module moduleToBuild;
-    
+
     private Camera mainCamera;
     private Plane groundPlane;
 
@@ -19,7 +21,6 @@ public class BuildManager : MonoBehaviour {
         if (GetInstance == null) {
             GetInstance = this;
         }
-
         existingNodes ??= new List<ShipNode>();
         builtModules ??= new List<Module>();
     }
@@ -31,7 +32,7 @@ public class BuildManager : MonoBehaviour {
 
     private void Update() {
         if (moduleToBuild == null) return;
-        
+
         if (Input.GetMouseButtonDown(1)) {
             Destroy(moduleToBuild.gameObject);
         }
@@ -64,13 +65,7 @@ public class BuildManager : MonoBehaviour {
 
     //return true if node with passed coordinates exists
     private bool checkNodeForExisting(Vector3 coordinate) {
-        foreach (var node in existingNodes) {
-            if (coordinate.Equals(node.transform.position)) {
-                return true;
-            }
-        }
-
-        return false;
+        return existingNodes.Any(node => coordinate.Equals(node.transform.position));
     }
 
     private void buildModule(bool available) {
@@ -78,6 +73,7 @@ public class BuildManager : MonoBehaviour {
             moduleToBuild.returnToNormalState();
             setModuleNodes();
             builtModules.Add(moduleToBuild);
+            moduleToBuild.gameObject.transform.parent = currentShip.transform;
             moduleToBuild = null;
         }
     }
@@ -88,7 +84,7 @@ public class BuildManager : MonoBehaviour {
         foreach (var direction in nodeDirections) {
             Vector3 vector3 = ModuleUtils.vector2Direction(direction) + moduleToBuild.transform.position;
             ShipNode node = findNodeByCoordinates(vector3);
-            
+
             //TODO: potential bug?
             if (!node.isEmpty)
                 cleanUpNode(node);
@@ -113,7 +109,6 @@ public class BuildManager : MonoBehaviour {
         if (moduleToBuild != null) {
             Destroy(moduleToBuild.gameObject);
         }
-
         moduleToBuild = Instantiate(modulePrefab);
     }
 
@@ -126,5 +121,16 @@ public class BuildManager : MonoBehaviour {
         foreach (var module in builtModules) {
             Debug.Log(module);
         }
+    }
+
+
+    public bool isAnyEmptyNode() {
+        foreach (var node in existingNodes) {
+            if (node.isEmpty) {
+                Debug.Log("There is an empty node!!!");
+                return true;
+            }
+        }
+        return false;
     }
 }
