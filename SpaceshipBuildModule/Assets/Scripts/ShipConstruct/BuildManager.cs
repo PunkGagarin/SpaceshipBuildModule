@@ -116,14 +116,6 @@ public class BuildManager : MonoBehaviour {
         existingNodes.Add(node);
     }
 
-    //TODO: delete after tests
-    public void showAllModules() {
-        foreach (var module in builtModules) {
-            Debug.Log(module);
-        }
-    }
-
-
     public bool isAnyEmptyNode() {
         foreach (var node in existingNodes) {
             if (node.isEmpty) {
