@@ -9,3 +9,5 @@ UI
 
 Build and tests environment:
 Windows 10, PC, 500x800 screen
+
+BuildLink: https://drive.google.com/drive/folders/1wNeUEJbbPaRNDXH_eTsP2R-uDIyowd50?usp=sharing
