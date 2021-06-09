@@ -30,9 +30,12 @@ public class BuildManager : MonoBehaviour {
     }
 
     private void Update() {
-        if (moduleToBuild != null) {
-            moveAndBuildTempModule();
+        if (moduleToBuild == null) return;
+        
+        if (Input.GetMouseButtonDown(1)) {
+            Destroy(moduleToBuild.gameObject);
         }
+        moveAndBuildTempModule();
     }
 
     private void moveAndBuildTempModule() {
@@ -106,7 +109,7 @@ public class BuildManager : MonoBehaviour {
         Destroy(nodeBuiltModule.gameObject);
     }
 
-    public void prepareTemporalModule(Module modulePrefab) {
+    public void prepareModuleToBuild(Module modulePrefab) {
         if (moduleToBuild != null) {
             Destroy(moduleToBuild.gameObject);
         }
