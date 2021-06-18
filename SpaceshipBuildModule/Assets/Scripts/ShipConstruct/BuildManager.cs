@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BuildManager : MonoBehaviour {
-    public GameObject currentShip;
+    [HideInInspector] public GameObject currentShip;
 
     private List<ShipNode> existingNodes;
 
     //Currently selected module
     private Module moduleToBuild;
+    private ModuleUI moduleUI;
 
     private Camera mainCamera;
     private Plane groundPlane;
@@ -25,25 +27,30 @@ public class BuildManager : MonoBehaviour {
     private void Start() {
         mainCamera = Camera.main;
         groundPlane = new Plane(Vector3.forward, Vector3.zero);
+        moduleUI = ModuleUI.GetInstance;
     }
 
     private void Update() {
         if (moduleToBuild == null) return;
 
-        if (Input.GetMouseButtonDown(1)) {
-            Destroy(moduleToBuild.gameObject);
+
+        if (Input.GetMouseButton(0)) {
+            moveAndBuildTempModule();
+            if (!EventSystem.current.IsPointerOverGameObject())
+                moduleUI.freezeCurrentScrollPosition();
         }
-        moveAndBuildTempModule();
+        if (Input.GetMouseButtonUp(0)) {
+            releaseModule();
+        }
     }
 
     private void moveAndBuildTempModule() {
         var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (groundPlane.Raycast(ray, out var position)) {
-            var worldPosition = ray.GetPoint((position));
+            var worldPosition = ray.GetPoint(position);
             roundAndCreatePosition(worldPosition);
-            var available = checkModuleForBuild(moduleToBuild.transform.position);
+            bool available = checkModuleForBuild(moduleToBuild.transform.position);
             moduleToBuild.setTransparent(available);
-            buildModule(available);
         }
     }
 
@@ -65,13 +72,18 @@ public class BuildManager : MonoBehaviour {
         return existingNodes.Any(node => coordinate.Equals(node.transform.position));
     }
 
-    private void buildModule(bool available) {
-        if (available && Input.GetMouseButtonDown(0)) {
+    private void releaseModule() {
+        bool available = checkModuleForBuild(moduleToBuild.transform.position);
+        if (available) {
             moduleToBuild.returnToNormalState();
             setModuleNodes();
             moduleToBuild.gameObject.transform.parent = currentShip.transform;
             moduleToBuild = null;
         }
+        else {
+            Destroy(moduleToBuild.gameObject);
+        }
+        moduleUI.unfreezeScrollPosition();
     }
 
     private void setModuleNodes() {
