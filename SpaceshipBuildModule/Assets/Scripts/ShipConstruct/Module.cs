@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class Module : MonoBehaviour {
     public SpriteRenderer mainRenderer;
+    //TODO: move to different class(implement 2 classes)
     public List<NodeDirections> directions;
-    public List<ShipNode> occupiedNodes;
-
+    public Vector2Int size;
+    
+    
+    private List<ShipNode> occupiedNodes;
     private Color startColor;
 
     private void Awake() {

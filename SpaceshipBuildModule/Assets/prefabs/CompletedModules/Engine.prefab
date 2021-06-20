@@ -129,4 +129,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainRenderer: {fileID: 8751198303699144027}
   directions: 0000000004000000
+  size: {x: 1, y: 3}
   occupiedNodes: []

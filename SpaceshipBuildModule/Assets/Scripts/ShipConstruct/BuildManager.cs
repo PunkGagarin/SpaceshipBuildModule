@@ -6,22 +6,25 @@ using UnityEngine.EventSystems;
 public class BuildManager : MonoBehaviour {
     [HideInInspector] public GameObject currentShip;
 
-    private List<ShipNode> existingNodes;
-
     //Currently selected module
-    private Module moduleToBuild;
     private ModuleUI moduleUI;
+    private BuildCheckerInterface buildChecker;
 
     private Camera mainCamera;
     private Plane groundPlane;
 
     public static BuildManager GetInstance { get; private set; }
 
+    public List<ShipNode> existingNodes { get; private set; }
+
+    public Module moduleToBuild { get; private set; }
+
     private void Awake() {
         if (GetInstance == null) {
             GetInstance = this;
         }
         existingNodes ??= new List<ShipNode>();
+        buildChecker = GetComponent<BuildCheckerInterface>();
     }
 
     private void Start() {
@@ -49,7 +52,7 @@ public class BuildManager : MonoBehaviour {
         if (groundPlane.Raycast(ray, out var position)) {
             var worldPosition = ray.GetPoint(position);
             roundAndCreatePosition(worldPosition);
-            bool available = checkModuleForBuild(moduleToBuild.transform.position);
+            bool available = buildChecker.checkModuleForBuild(moduleToBuild.transform.position);
             moduleToBuild.setTransparent(available);
         }
     }
@@ -60,20 +63,8 @@ public class BuildManager : MonoBehaviour {
         moduleToBuild.transform.position = new Vector3(x, y);
     }
 
-    //todo: reduce calling frequency??
-    private bool checkModuleForBuild(Vector3 baseCoordinate) {
-        var nodeDirections = moduleToBuild.directions;
-        return nodeDirections.Select(direction =>
-            ModuleUtils.vector2Direction(direction) + baseCoordinate).All(checkNodeForExisting);
-    }
-
-    //return true if node with passed coordinates exists
-    private bool checkNodeForExisting(Vector3 coordinate) {
-        return existingNodes.Any(node => coordinate.Equals(node.transform.position));
-    }
-
     private void releaseModule() {
-        bool available = checkModuleForBuild(moduleToBuild.transform.position);
+        bool available = buildChecker.checkModuleForBuild(moduleToBuild.transform.position);
         if (available) {
             moduleToBuild.returnToNormalState();
             setModuleNodes();
