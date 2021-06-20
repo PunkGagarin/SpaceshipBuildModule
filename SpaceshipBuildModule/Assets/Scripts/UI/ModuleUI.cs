@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ public class ModuleUI : MonoBehaviour {
     private float lastScrollPos;
 
     private UnityAction<float> changeScrollposAction;
+    private bool isScrollbarFrozen = false;
 
     public static ModuleUI GetInstance { get; private set; }
 
@@ -33,15 +35,22 @@ public class ModuleUI : MonoBehaviour {
     }
 
     public void freezeCurrentScrollPosition() {
-        if (activeModuleScrollbar != null) {
+        if (activeModuleScrollbar != null && !isScrollbarFrozen) {
             activeModuleScrollbar.onValueChanged.AddListener(changeScrollposAction);
             lastScrollPos = activeModuleScrollbar.value;
+            if (lastScrollPos >= 1)
+                lastScrollPos = 1.01f;
+            else if (lastScrollPos <= 0)
+                lastScrollPos = -0.01f;
+
+            isScrollbarFrozen = true;
         }
     }
 
     public void unfreezeScrollPosition() {
-        if (activeModuleScrollbar != null) {
+        if (activeModuleScrollbar != null && isScrollbarFrozen) {
             activeModuleScrollbar.onValueChanged.RemoveListener(changeScrollposAction);
+            isScrollbarFrozen = false;
         }
     }
 

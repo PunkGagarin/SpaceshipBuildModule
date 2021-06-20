@@ -4,13 +4,13 @@ using UnityEngine.EventSystems;
 
 public class DragNDrop : MonoBehaviour, IPointerDownHandler {
 
-    public UnityEvent myUnityEvent;
+    public UnityEvent buildEvent;
  
     private void Awake() {
-        myUnityEvent ??= new UnityEvent();
+        buildEvent ??= new UnityEvent();
     }
 
     public void OnPointerDown(PointerEventData eventData) {
-        myUnityEvent.Invoke();
+        buildEvent.Invoke();
     }
 }
