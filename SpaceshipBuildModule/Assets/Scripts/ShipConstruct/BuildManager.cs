@@ -67,7 +67,7 @@ public class BuildManager : MonoBehaviour {
         bool available = buildChecker.checkModuleForBuild(moduleToBuild.transform.position);
         if (available) {
             moduleToBuild.returnToNormalState();
-            setModuleNodes();
+            setModuleNodesBySize();
             moduleToBuild.gameObject.transform.parent = currentShip.transform;
             moduleToBuild = null;
         }
@@ -77,19 +77,31 @@ public class BuildManager : MonoBehaviour {
         moduleUI.unfreezeScrollPosition();
     }
 
-    private void setModuleNodes() {
+    private void setModuleNodesByDirections() {
         var nodeDirections = moduleToBuild.directions;
-
         foreach (var direction in nodeDirections) {
-            Vector3 vector3 = ModuleUtils.vector2Direction(direction) + moduleToBuild.transform.position;
-            ShipNode node = findNodeByCoordinates(vector3);
-
-            //TODO: potential bug?
-            if (!node.isEmpty)
-                cleanUpNode(node);
-            node.builtModule = moduleToBuild;
-            moduleToBuild.addOccupiedNode(node);
+            setModuleNodes(ModuleUtils.vector2Direction(direction));
         }
+    }
+
+    private void setModuleNodesBySize() {
+        for (int x = 0; x < moduleToBuild.size.x; x++) {
+            for (int y = 0; y < moduleToBuild.size.y; y++) {
+                Vector3 offset = new Vector3(x, y, 0);
+                setModuleNodes(offset);
+            }
+        }
+    }
+
+    private void setModuleNodes(Vector3 offset) {
+        var coordinateToBuild = offset + moduleToBuild.transform.position;
+        ShipNode node = findNodeByCoordinates(coordinateToBuild);
+
+        //TODO: potential bug?
+        if (!node.isEmpty)
+            cleanUpNode(node);
+        node.builtModule = moduleToBuild;
+        moduleToBuild.addOccupiedNode(node);
     }
 
     //return node with passed coordinates or null
