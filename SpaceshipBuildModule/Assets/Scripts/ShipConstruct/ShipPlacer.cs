@@ -35,7 +35,6 @@ public class ShipPlacer : MonoBehaviour {
         var shipToInstantiate = shipPrefabs[shipIndex];
         var ship = Instantiate(shipToInstantiate, Vector3.zero, Quaternion.identity);
         DontDestroyOnLoad(ship);
-        // buildManager.currentShip = ship;
         buildManager.currentShipModel = ship.GetComponent<Ship>();
     }
 }

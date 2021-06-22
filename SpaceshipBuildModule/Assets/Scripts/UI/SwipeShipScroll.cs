@@ -35,7 +35,6 @@ public class SwipeShipScroll : MonoBehaviour {
     //Round current scrollbar position to the center of nearest button and set scales
     private void roundButtonAndScale() {
         for (int i = 0; i < positions.Length; i++) {
-            //i = 1
             if (scrollbarPosition < positions[i] + (distance / 2) &&
                 scrollbarPosition > positions[i] - (distance / 2)) {
                 ShipCache.currentShipIndex1 = i + 1;

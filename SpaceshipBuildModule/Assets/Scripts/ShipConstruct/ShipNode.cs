@@ -6,10 +6,12 @@ public class ShipNode : MonoBehaviour {
     public ShipNode rightNeighbour { get; private set; }
     public bool isEmpty { get; set; } = true;
 
-    //Module, that was built on this node
     public Module builtModule { get; set; }
 
-    //TODO: or delegate to ShipPlacer?
+    private void Start() {
+        GetComponentInParent<Ship>().nodes.Add(this);
+    }
+
     private void OnEnable() {
         nodeManager = NodeManager.GetInstance;
         nodeManager.addExistingNode(this);

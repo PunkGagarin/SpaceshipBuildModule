@@ -22,7 +22,6 @@ public class NodeManager : MonoBehaviour {
 
     public void addExistingNode(ShipNode node) {
         existingNodes.Add(node);
-        buildManager.currentShipModel.nodes.Add(node);
     }
 
     public bool isAnyEmptyNodeExists() {
@@ -34,10 +33,18 @@ public class NodeManager : MonoBehaviour {
             node.initNeighbours();
         }
     }
+    
+    public void setModuleNodes(ShipNode node, Module moduleToBuild) {
+        if (!node.isEmpty)
+            cleanUpNode(node);
+        node.builtModule = moduleToBuild;
+        moduleToBuild.addOccupiedNode(node);
+    }
 
-    public void cleanUpNode(ShipNode node) {
+    private void cleanUpNode(ShipNode node) {
         var nodeBuiltModule = node.builtModule;
         nodeBuiltModule.cleanUpOccupiedNodes();
+        buildManager.currentShipModel.modules.Remove(nodeBuiltModule);
         Destroy(nodeBuiltModule.gameObject);
     }
 }

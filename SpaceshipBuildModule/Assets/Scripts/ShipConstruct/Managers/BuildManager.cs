@@ -44,15 +44,6 @@ public class BuildManager : MonoBehaviour {
         }
     }
 
-    private ShipNode castToGetNode() {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, nodeLayer.value);
-        if (hit.transform != null) {
-            //TODO: get node to the future processing
-        }
-        return null;
-    }
-
     private void moveAndBuildTempModule() {
         var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (groundPlane.Raycast(ray, out var position)) {
@@ -88,10 +79,8 @@ public class BuildManager : MonoBehaviour {
         if (available) {
             moduleToBuild.returnToNormalState();
             setModuleNodesBySize();
-            // moduleToBuild.gameObject.transform.parent = currentShip.transform;
             currentShipModel.modules.Add(moduleToBuild);
             moduleToBuild.gameObject.transform.parent = currentShipModel.transform;
-
             moduleToBuild = null;
         }
         else {
@@ -106,17 +95,9 @@ public class BuildManager : MonoBehaviour {
                 var offset = new Vector3(x, y, 0);
                 var coordinateToBuild = offset + moduleToBuild.transform.position;
                 var node = nodeManager.findNodeByCoordinates(coordinateToBuild);
-                setModuleNodes(node);
+                nodeManager.setModuleNodes(node, moduleToBuild);
             }
         }
-    }
-
-    private void setModuleNodes(ShipNode node) {
-        //TODO: potential bug?
-        if (!node.isEmpty)
-            nodeManager.cleanUpNode(node);
-        node.builtModule = moduleToBuild;
-        moduleToBuild.addOccupiedNode(node);
     }
 
     public void prepareModuleToBuild(Module modulePrefab) {
