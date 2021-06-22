@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5484759709172901798}
   - component: {fileID: 6602975979519535162}
   - component: {fileID: 7945236536406715015}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: shipNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,8 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22512b2563abda043a26dbaebbdc6340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 0
-  builtModule: {fileID: 0}
 --- !u!61 &7945236536406715015
 BoxCollider2D:
   m_ObjectHideFlags: 0

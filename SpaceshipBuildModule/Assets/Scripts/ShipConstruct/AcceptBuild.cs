@@ -6,16 +6,18 @@ public class AcceptBuild : MonoBehaviour {
     private GameObject emptyNodeUI;
 
     private BuildManager buildManager;
+    private NodeManager nodeManager;
     private SceneChanger sceneChanger;
 
 
     private void Start() {
         buildManager = GetComponent<BuildManager>();
+        nodeManager = GetComponent<NodeManager>();
         sceneChanger = GetComponent<SceneChanger>();
     }
 
     public void tryToAccept() {
-        if (buildManager.isAnyEmptyNodeExists()) {
+        if (nodeManager.isAnyEmptyNodeExists()) {
             emptyNodeUI.SetActive(true);
             StartCoroutine(disableEmptyNodeUI());
             return;

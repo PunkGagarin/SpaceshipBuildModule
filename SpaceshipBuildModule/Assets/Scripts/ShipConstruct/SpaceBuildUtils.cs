@@ -33,4 +33,15 @@ public static class SpaceBuildUtils {
     {
         return tryAdd(dictionary, value.Key, value.Value);
     }
+
+    public static Vector2 roundVector2(Vector2 vector2) {
+        var x = Mathf.RoundToInt(vector2.x);
+        var y = Mathf.RoundToInt(vector2.y);
+        return new Vector2(x, y);
+    }
+    public static Vector2 roundVector3(Vector3 vector3) {
+        var x = Mathf.RoundToInt(vector3.x);
+        var y = Mathf.RoundToInt(vector3.y);
+        return new Vector3(x, y);
+    }
 }

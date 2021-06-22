@@ -1,5 +1,3 @@
-using UnityEngine;
-
 internal interface BuildCheckerInterface {
-    bool checkModuleForBuild(Vector3 baseCoordinate);
+    bool checkModuleForBuild(ShipNode shipNode);
 }

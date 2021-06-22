@@ -1,23 +1,26 @@
 using UnityEngine;
 
 public class ShipNode : MonoBehaviour {
-    private BuildManager buildManager;
-
-    //delegate to BuildManager?
-    public bool isEmpty { get; set; }
+    private NodeManager nodeManager;
+    public ShipNode topNeighbour { get; private set; }
+    public ShipNode rightNeighbour { get; private set; }
+    public bool isEmpty { get; set; } = true;
 
     //Module, that was built on this node
     public Module builtModule { get; set; }
 
-    //TODO: should node contain neighbour nodes????
-
-
-    private void Awake() {
-        isEmpty = true;
+    //TODO: or delegate to ShipPlacer?
+    private void OnEnable() {
+        nodeManager = NodeManager.GetInstance;
+        nodeManager.addExistingNode(this);
     }
 
-    private void Start() {
-        buildManager = BuildManager.GetInstance;
-        buildManager.addExistingNode(this);
+    public void initNeighbours() {
+        topNeighbour = nodeManager.findNodeByCoordinates(
+            SpaceBuildUtils.vector2Direction(NodeDirections.Top) + transform.position
+        );
+        rightNeighbour = nodeManager.findNodeByCoordinates(
+            SpaceBuildUtils.vector2Direction(NodeDirections.Right) + transform.position
+        );
     }
 }

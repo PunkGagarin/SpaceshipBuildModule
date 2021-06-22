@@ -1,30 +1,29 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class BuildManager : MonoBehaviour {
     [HideInInspector] public GameObject currentShip;
+    [SerializeField] private LayerMask nodeLayer;
 
     //Currently selected module
     private ModuleUI moduleUI;
     private BuildCheckerInterface buildChecker;
+    private NodeManager nodeManager;
 
     private Camera mainCamera;
     private Plane groundPlane;
 
-    public static BuildManager GetInstance { get; private set; }
-
-    public List<ShipNode> existingNodes { get; private set; }
 
     public Module moduleToBuild { get; private set; }
+
+    public static BuildManager GetInstance { get; private set; }
 
     private void Awake() {
         if (GetInstance == null) {
             GetInstance = this;
         }
-        existingNodes ??= new List<ShipNode>();
         buildChecker = GetComponent<BuildCheckerInterface>();
+        nodeManager = GetComponent<NodeManager>();
     }
 
     private void Start() {
@@ -36,7 +35,6 @@ public class BuildManager : MonoBehaviour {
     private void Update() {
         if (moduleToBuild == null) return;
 
-
         if (Input.GetMouseButton(0)) {
             moveAndBuildTempModule();
             if (!EventSystem.current.IsPointerOverGameObject())
@@ -47,24 +45,47 @@ public class BuildManager : MonoBehaviour {
         }
     }
 
+    private ShipNode castToGetNode() {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, nodeLayer.value);
+        if (hit.transform != null) {
+            //TODO: get node to the future processing
+        }
+        return null;
+    }
+
     private void moveAndBuildTempModule() {
         var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (groundPlane.Raycast(ray, out var position)) {
             var worldPosition = ray.GetPoint(position);
             roundAndCreatePosition(worldPosition);
-            bool available = buildChecker.checkModuleForBuild(moduleToBuild.transform.position);
+            bool available = false;
+            if (isPointOverNode(out var node))
+                available = buildChecker.checkModuleForBuild(node);
             moduleToBuild.setTransparent(available);
         }
     }
 
+    private bool isPointOverNode(out ShipNode shipNode) {
+        shipNode = null;
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(SpaceBuildUtils.roundVector2(ray.origin),
+            SpaceBuildUtils.roundVector2(ray.direction), Mathf.Infinity, nodeLayer.value);
+        if (hit.transform != null) {
+            shipNode = hit.transform.gameObject.GetComponent<ShipNode>();
+            return true;
+        }
+        return false;
+    }
+
     private void roundAndCreatePosition(Vector3 worldPosition) {
-        var x = Mathf.RoundToInt(worldPosition.x);
-        var y = Mathf.RoundToInt(worldPosition.y);
-        moduleToBuild.transform.position = new Vector3(x, y);
+        moduleToBuild.transform.position = SpaceBuildUtils.roundVector3(worldPosition);
     }
 
     private void releaseModule() {
-        bool available = buildChecker.checkModuleForBuild(moduleToBuild.transform.position);
+        bool available = false;
+        if (isPointOverNode(out var node))
+            available = buildChecker.checkModuleForBuild(node);
         if (available) {
             moduleToBuild.returnToNormalState();
             setModuleNodesBySize();
@@ -80,39 +101,30 @@ public class BuildManager : MonoBehaviour {
     private void setModuleNodesByDirections() {
         var nodeDirections = moduleToBuild.directions;
         foreach (var direction in nodeDirections) {
-            setModuleNodes(SpaceBuildUtils.vector2Direction(direction));
+            ShipNode node =
+                nodeManager.findNodeByCoordinates(SpaceBuildUtils.vector2Direction(direction) +
+                                                  moduleToBuild.transform.position);
+            setModuleNodes(node);
         }
     }
 
     private void setModuleNodesBySize() {
         for (int x = 0; x < moduleToBuild.size.x; x++) {
             for (int y = 0; y < moduleToBuild.size.y; y++) {
-                Vector3 offset = new Vector3(x, y, 0);
-                setModuleNodes(offset);
+                var offset = new Vector3(x, y, 0);
+                var coordinateToBuild = offset + moduleToBuild.transform.position;
+                var node = nodeManager.findNodeByCoordinates(coordinateToBuild);
+                setModuleNodes(node);
             }
         }
     }
 
-    private void setModuleNodes(Vector3 offset) {
-        var coordinateToBuild = offset + moduleToBuild.transform.position;
-        ShipNode node = findNodeByCoordinates(coordinateToBuild);
-
+    private void setModuleNodes(ShipNode node) {
         //TODO: potential bug?
         if (!node.isEmpty)
-            cleanUpNode(node);
+            nodeManager.cleanUpNode(node);
         node.builtModule = moduleToBuild;
         moduleToBuild.addOccupiedNode(node);
-    }
-
-    //return node with passed coordinates or null
-    private ShipNode findNodeByCoordinates(Vector3 coordinate) {
-        return existingNodes.FirstOrDefault(node => coordinate.Equals(node.transform.position));
-    }
-
-    private void cleanUpNode(ShipNode node) {
-        var nodeBuiltModule = node.builtModule;
-        nodeBuiltModule.cleanUpOccupiedNodes();
-        Destroy(nodeBuiltModule.gameObject);
     }
 
     public void prepareModuleToBuild(Module modulePrefab) {
@@ -120,13 +132,5 @@ public class BuildManager : MonoBehaviour {
             Destroy(moduleToBuild.gameObject);
         }
         moduleToBuild = Instantiate(modulePrefab);
-    }
-
-    public void addExistingNode(ShipNode node) {
-        existingNodes.Add(node);
-    }
-
-    public bool isAnyEmptyNodeExists() {
-        return existingNodes.Any(node => node.isEmpty);
     }
 }

@@ -4,10 +4,12 @@ public class ShipPlacer : MonoBehaviour {
     [SerializeField]
     private GameObject[] shipPrefabs;
     private BuildManager buildManager;
+    private NodeManager nodeManager;
 
 
     private void Start() {
-        buildManager = BuildManager.GetInstance;
+        buildManager =GetComponent<BuildManager>();
+        nodeManager =GetComponent<NodeManager>();
 
         placeShip();
     }
@@ -20,16 +22,13 @@ public class ShipPlacer : MonoBehaviour {
         else {
             placeNewShip(shipIndex);
         }
+        nodeManager.initExistingNodes();
     }
 
     private void placeExistingShip(GameObject existingShip) {
         existingShip.SetActive(true);
         existingShip.transform.position = Vector3.zero;
         buildManager.currentShip = existingShip;
-
-        foreach (var shipNode in existingShip.GetComponentsInChildren<ShipNode>()) {
-            buildManager.addExistingNode(shipNode);
-        }
     }
 
 
