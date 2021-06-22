@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 
 public class BuildManager : MonoBehaviour {
     [HideInInspector] public GameObject currentShip;
+    [HideInInspector] public Ship currentShipModel;
     [SerializeField] private LayerMask nodeLayer;
 
     //Currently selected module
@@ -12,7 +13,6 @@ public class BuildManager : MonoBehaviour {
 
     private Camera mainCamera;
     private Plane groundPlane;
-
 
     public Module moduleToBuild { get; private set; }
 
@@ -89,23 +89,16 @@ public class BuildManager : MonoBehaviour {
         if (available) {
             moduleToBuild.returnToNormalState();
             setModuleNodesBySize();
-            moduleToBuild.gameObject.transform.parent = currentShip.transform;
+            // moduleToBuild.gameObject.transform.parent = currentShip.transform;
+            currentShipModel.modules.Add(moduleToBuild);
+            moduleToBuild.gameObject.transform.parent = currentShipModel.transform;
+
             moduleToBuild = null;
         }
         else {
             Destroy(moduleToBuild.gameObject);
         }
         moduleUI.unfreezeScrollPosition();
-    }
-
-    private void setModuleNodesByDirections() {
-        var nodeDirections = moduleToBuild.directions;
-        foreach (var direction in nodeDirections) {
-            ShipNode node =
-                nodeManager.findNodeByCoordinates(SpaceBuildUtils.vector2Direction(direction) +
-                                                  moduleToBuild.transform.position);
-            setModuleNodes(node);
-        }
     }
 
     private void setModuleNodesBySize() {

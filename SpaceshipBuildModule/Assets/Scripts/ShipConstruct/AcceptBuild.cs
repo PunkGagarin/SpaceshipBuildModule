@@ -22,8 +22,9 @@ public class AcceptBuild : MonoBehaviour {
             StartCoroutine(disableEmptyNodeUI());
             return;
         }
-        ShipCache.existingShips.tryAdd(ShipCache.currentShipIndex1, buildManager.currentShip);
-        buildManager.currentShip.SetActive(false);
+        buildManager.currentShipModel.nodes.AddRange(nodeManager.existingNodes);
+        ShipCache.existingShips.tryAdd(ShipCache.currentShipIndex1, buildManager.currentShipModel);
+        buildManager.currentShipModel.gameObject.SetActive(false);
         sceneChanger.GoToShipChoiceScene();
     }
 

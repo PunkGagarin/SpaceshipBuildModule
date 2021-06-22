@@ -1,15 +1,14 @@
 using UnityEngine;
 
 public class ShipPlacer : MonoBehaviour {
-    [SerializeField]
-    private GameObject[] shipPrefabs;
+    [SerializeField] private GameObject[] shipPrefabs;
     private BuildManager buildManager;
     private NodeManager nodeManager;
 
 
     private void Start() {
-        buildManager =GetComponent<BuildManager>();
-        nodeManager =GetComponent<NodeManager>();
+        buildManager = GetComponent<BuildManager>();
+        nodeManager = GetComponent<NodeManager>();
 
         placeShip();
     }
@@ -25,10 +24,10 @@ public class ShipPlacer : MonoBehaviour {
         nodeManager.initExistingNodes();
     }
 
-    private void placeExistingShip(GameObject existingShip) {
-        existingShip.SetActive(true);
+    private void placeExistingShip(Ship existingShip) {
+        existingShip.gameObject.SetActive(true);
         existingShip.transform.position = Vector3.zero;
-        buildManager.currentShip = existingShip;
+        buildManager.currentShipModel = existingShip;
     }
 
 
@@ -36,6 +35,7 @@ public class ShipPlacer : MonoBehaviour {
         var shipToInstantiate = shipPrefabs[shipIndex];
         var ship = Instantiate(shipToInstantiate, Vector3.zero, Quaternion.identity);
         DontDestroyOnLoad(ship);
-        buildManager.currentShip = ship;
+        // buildManager.currentShip = ship;
+        buildManager.currentShipModel = ship.GetComponent<Ship>();
     }
 }
