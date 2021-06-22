@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 public class NodeManager : MonoBehaviour {
+    private BuildManager buildManager;
     public List<ShipNode> existingNodes { get; private set; }
 
     public static NodeManager GetInstance { get; private set; }
@@ -11,7 +12,8 @@ public class NodeManager : MonoBehaviour {
         if (GetInstance == null) {
             GetInstance = this;
         }
-        existingNodes ??= new List<ShipNode>();
+        existingNodes ??= new List<ShipNode>(); 
+        buildManager = GetComponent<BuildManager>();
     }
 
     public ShipNode findNodeByCoordinates(Vector3 coordinate) {
@@ -20,6 +22,7 @@ public class NodeManager : MonoBehaviour {
 
     public void addExistingNode(ShipNode node) {
         existingNodes.Add(node);
+        buildManager.currentShipModel.nodes.Add(node);
     }
 
     public bool isAnyEmptyNodeExists() {

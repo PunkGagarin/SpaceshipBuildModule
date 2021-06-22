@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class BuildManager : MonoBehaviour {
-    [HideInInspector] public GameObject currentShip;
     [HideInInspector] public Ship currentShipModel;
     [SerializeField] private LayerMask nodeLayer;
 

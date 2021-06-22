@@ -22,11 +22,11 @@ public class AcceptBuild : MonoBehaviour {
             StartCoroutine(disableEmptyNodeUI());
             return;
         }
-        buildManager.currentShipModel.nodes.AddRange(nodeManager.existingNodes);
         ShipCache.existingShips.tryAdd(ShipCache.currentShipIndex1, buildManager.currentShipModel);
         buildManager.currentShipModel.gameObject.SetActive(false);
         sceneChanger.GoToShipChoiceScene();
     }
+    
 
     private IEnumerator disableEmptyNodeUI() {
         yield return new WaitForSeconds(3.5f);
