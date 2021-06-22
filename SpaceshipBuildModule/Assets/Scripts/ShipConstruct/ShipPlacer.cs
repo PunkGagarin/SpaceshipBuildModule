@@ -1,7 +1,8 @@
 using UnityEngine;
 
 public class ShipPlacer : MonoBehaviour {
-    public GameObject[] shipPrefabs;
+    [SerializeField]
+    private GameObject[] shipPrefabs;
     private BuildManager buildManager;
 
 
@@ -12,7 +13,7 @@ public class ShipPlacer : MonoBehaviour {
     }
 
     private void placeShip() {
-        var shipIndex = ShipCache.currentShipIndex > shipPrefabs.Length ? 0 : ShipCache.currentShipIndex - 1;
+        var shipIndex = ShipCache.currentShipIndex1 > shipPrefabs.Length ? 0 : ShipCache.currentShipIndex1 - 1;
         if (ShipCache.existingShips.TryGetValue(shipIndex + 1, out var existingShip)) {
             placeExistingShip(existingShip);
         }

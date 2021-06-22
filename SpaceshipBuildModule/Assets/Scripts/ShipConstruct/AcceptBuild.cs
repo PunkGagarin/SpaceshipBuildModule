@@ -2,7 +2,8 @@ using System.Collections;
 using UnityEngine;
 
 public class AcceptBuild : MonoBehaviour {
-    public GameObject emptyNodeUI;
+    [SerializeField]
+    private GameObject emptyNodeUI;
 
     private BuildManager buildManager;
     private SceneChanger sceneChanger;
@@ -19,13 +20,13 @@ public class AcceptBuild : MonoBehaviour {
             StartCoroutine(disableEmptyNodeUI());
             return;
         }
-        ShipCache.existingShips.tryAdd(ShipCache.currentShipIndex, buildManager.currentShip);
+        ShipCache.existingShips.tryAdd(ShipCache.currentShipIndex1, buildManager.currentShip);
         buildManager.currentShip.SetActive(false);
         sceneChanger.GoToShipChoiceScene();
     }
 
     private IEnumerator disableEmptyNodeUI() {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(3.5f);
         emptyNodeUI.SetActive(false);
     }
 }

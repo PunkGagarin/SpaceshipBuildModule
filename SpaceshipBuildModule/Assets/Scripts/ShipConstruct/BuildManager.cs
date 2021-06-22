@@ -80,7 +80,7 @@ public class BuildManager : MonoBehaviour {
     private void setModuleNodesByDirections() {
         var nodeDirections = moduleToBuild.directions;
         foreach (var direction in nodeDirections) {
-            setModuleNodes(ModuleUtils.vector2Direction(direction));
+            setModuleNodes(SpaceBuildUtils.vector2Direction(direction));
         }
     }
 

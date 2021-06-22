@@ -15,7 +15,8 @@ public class ContentUI : MonoBehaviour {
         public UnityEvent buildEvent;
     }
 
-    public ButtonItem[] buttonItems;
+    [SerializeField]
+    private ButtonItem[] buttonItems;
 
     private void Start() {
         content = GetComponent<RectTransform>();

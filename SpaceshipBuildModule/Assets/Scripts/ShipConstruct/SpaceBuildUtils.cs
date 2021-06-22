@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ModuleUtils {
+public static class SpaceBuildUtils {
 
     public static Vector3 vector2Direction(NodeDirections direction) {
         return direction switch

@@ -2,12 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SwipeShipScroll : MonoBehaviour {
-    public Scrollbar scrollbar;
+    [SerializeField]
+    private Scrollbar scrollbar;
 
     private float scrollbarPosition;
-
     private float[] positions;
-
     private float distance;
 
 
@@ -39,7 +38,7 @@ public class SwipeShipScroll : MonoBehaviour {
             //i = 1
             if (scrollbarPosition < positions[i] + (distance / 2) &&
                 scrollbarPosition > positions[i] - (distance / 2)) {
-                ShipCache.currentShipIndex = i + 1;
+                ShipCache.currentShipIndex1 = i + 1;
                 scrollbar.value =
                     Mathf.Lerp(scrollbar.value, positions[i], 0.05f);
                 lerpButtonScales(i, 1.3f, 1.3f);

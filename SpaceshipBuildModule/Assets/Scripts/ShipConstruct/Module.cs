@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Module : MonoBehaviour {
-    public SpriteRenderer mainRenderer;
     //TODO: move to different class(implement 2 classes)
-    public List<NodeDirections> directions;
-    public Vector2Int size;
-    
-    
+    [SerializeField] private List<NodeDirections> _directions;
+    [SerializeField] private Vector2Int _size;
+
+    [SerializeField] private SpriteRenderer mainRenderer;
     private List<ShipNode> occupiedNodes;
     private Color startColor;
 
@@ -17,8 +16,8 @@ public class Module : MonoBehaviour {
 
     private void Start() {
         occupiedNodes ??= new List<ShipNode>();
-        directions ??= new List<NodeDirections>();
-        directions.Add(NodeDirections.Center);
+        _directions ??= new List<NodeDirections>();
+        _directions.Add(NodeDirections.Center);
     }
 
     public void setTransparent(bool available) {
@@ -42,4 +41,8 @@ public class Module : MonoBehaviour {
 
         occupiedNodes.Clear();
     }
+
+    public List<NodeDirections> directions => _directions;
+
+    public Vector2Int size => _size;
 }
