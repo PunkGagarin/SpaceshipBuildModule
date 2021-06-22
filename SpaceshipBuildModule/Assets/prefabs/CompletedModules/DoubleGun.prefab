@@ -127,7 +127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e579cb8429c54baa8b0a8ef050afc8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _directions: 
+  _size: {x: 1, y: 2}
   mainRenderer: {fileID: 8751198303699144027}
-  directions: 00000000
-  size: {x: 1, y: 2}
-  occupiedNodes: []
