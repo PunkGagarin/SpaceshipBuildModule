@@ -25,7 +25,6 @@ public class Module : MonoBehaviour {
     }
 
     public void addOccupiedNode(ShipNode node) {
-        node.isEmpty = false;
         occupiedNodes.Add(node);
     }
 

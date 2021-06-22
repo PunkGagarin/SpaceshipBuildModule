@@ -38,6 +38,7 @@ public class NodeManager : MonoBehaviour {
         if (!node.isEmpty)
             cleanUpNode(node);
         node.builtModule = moduleToBuild;
+        node.isEmpty = false;
         moduleToBuild.addOccupiedNode(node);
     }
 
